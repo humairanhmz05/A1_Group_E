@@ -20,3 +20,7 @@ Focus State:
 3. Sarawak
 4. Selangor
 5. W.P. Labuan
+
+Date data downloaded:
+Income: retrieved_at_utc: "2026-10-20T10:54:26+00:00
+Poverty: retrieved_at_utc: "2026-10-20T10:54:26+00:00
