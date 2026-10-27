@@ -61,3 +61,60 @@ def validate_records(records: list[dict], required_keys: tuple[str, ...]) -> Non
             )
 
         seen.add(key)
+
+def index_by_key(records: list[dict]) -> dict:
+    """Create a dictionary indexed by (state, year).
+    Owner: Role 2. Reviewed by: Role 1.
+    """
+    indexed = {}
+
+    for record in records:
+        key = (record["state"], get_year(record))
+
+        if key in indexed:
+            raise ValueError(f"Duplicate key found: {key}")
+
+        indexed[key] = record
+
+    return indexed
+
+def join_records(
+    income_records: list[dict],
+    poverty_records: list[dict]
+) -> tuple:
+    """Join income and poverty records using (state, year).
+    Owner: Role 2. Reviewed by: Role 1.
+    """
+    income_index = index_by_key(income_records)
+    poverty_index = index_by_key(poverty_records)
+
+    income_keys = set(income_index.keys())
+    poverty_keys = set(poverty_index.keys())
+
+    common_keys = income_keys & poverty_keys
+    income_only = income_keys - poverty_keys
+    poverty_only = poverty_keys - income_keys
+
+    joined = []
+
+    for key in sorted(common_keys):
+        joined.append({
+            "state": key[0],
+            "year": key[1],
+            "income": income_index[key],
+            "poverty": poverty_index[key]
+        })
+
+    return joined, sorted(income_only), sorted(poverty_only)       
+
+
+
+def to_float(value) -> float:
+    """Convert None to np.nan and other values to float.
+    Owner: Role 2. Reviewed by: Role 1.
+    """
+    if value is None:
+        return np.nan
+
+    return float(value)
+    
